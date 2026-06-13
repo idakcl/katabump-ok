@@ -78,6 +78,7 @@ async function sendTelegramMessage(message, imagePath = null) {
 chromium.use(stealth);
 
 const CHROME_PATH = process.env.CHROME_PATH || '/usr/bin/google-chrome';
+const CDP_HOST = process.env.CDP_HOST || '127.0.0.1';
 const DEBUG_PORT = 9222;
 const VIEWPORT_WIDTH = 1280;
 const VIEWPORT_HEIGHT = 720;
@@ -178,7 +179,7 @@ async function checkProxy() {
 
 function checkPort(port) {
     return new Promise((resolve) => {
-        const req = http.get(`http://localhost:${port}/json/version`, (res) => {
+        const req = http.get(`http://${CDP_HOST}:${port}/json/version`, (res) => {
             res.resume();
             resolve(true);
         });
@@ -694,7 +695,7 @@ async function solveAltchaIfPresent(page, stageName = "Renew阶段", maxAttempts
     let browser;
     for (let k = 0; k < 5; k++) {
         try {
-            browser = await chromium.connectOverCDP(`http://localhost:${DEBUG_PORT}`);
+            browser = await chromium.connectOverCDP(`http://${CDP_HOST}:${DEBUG_PORT}`);
             console.log('连接成功！');
             break;
         } catch (e) {
